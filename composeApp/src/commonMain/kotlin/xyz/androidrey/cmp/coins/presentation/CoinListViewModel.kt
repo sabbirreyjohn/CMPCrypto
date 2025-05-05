@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import xyz.androidrey.cmp.coins.domain.GetCoinsListUseCase
 import xyz.androidrey.cmp.core.domain.Result
+import xyz.androidrey.cmp.core.util.formatFiat
+import xyz.androidrey.cmp.core.util.formatPercentage
 
 class CoinListViewModel(private val getCoinsListUseCase: GetCoinsListUseCase) : ViewModel() {
     private val _state = MutableStateFlow(CoinsState())
@@ -22,7 +24,7 @@ class CoinListViewModel(private val getCoinsListUseCase: GetCoinsListUseCase) : 
         )
 
     private suspend fun getAllCoins() {
-        when(val coinsResponse = getCoinsListUseCase.execute()) {
+        when (val coinsResponse = getCoinsListUseCase.execute()) {
             is Result.Success -> {
                 _state.update {
                     CoinsState(
@@ -32,14 +34,15 @@ class CoinListViewModel(private val getCoinsListUseCase: GetCoinsListUseCase) : 
                                 name = coinItem.coin.name,
                                 iconUrl = coinItem.coin.iconUrl,
                                 symbol = coinItem.coin.symbol,
-                                formattedPrice = coinItem.price.toString(), //TODO: formatFiat(coinItem.price),
-                                formattedChange = coinItem.change.toString(), //TODO: formatPercentage(coinItem.change),
+                                formattedPrice = formatFiat(coinItem.price),
+                                formattedChange = formatPercentage(coinItem.change),
                                 isPositive = coinItem.change >= 0,
                             )
                         }
                     )
                 }
             }
+
             is Result.Error -> {
                 _state.update {
                     it.copy(
