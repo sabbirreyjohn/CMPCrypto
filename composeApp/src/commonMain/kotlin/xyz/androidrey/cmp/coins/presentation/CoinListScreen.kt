@@ -208,7 +208,7 @@ fun CoinChartDialog(
                 onClick = onDismiss
             ) {
                 Text(
-                    text = "Close",
+                    text = "Close"
                 )
             }
         }
