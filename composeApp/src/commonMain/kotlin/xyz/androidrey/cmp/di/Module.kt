@@ -10,10 +10,12 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import xyz.androidrey.cmp.coins.data.remote.impl.KtorCoinsRemoteDataSource
 import xyz.androidrey.cmp.coins.domain.GetCoinDetailsUseCase
+import xyz.androidrey.cmp.coins.domain.GetCoinPriceHistoryUseCase
 import xyz.androidrey.cmp.coins.domain.GetCoinsListUseCase
 import xyz.androidrey.cmp.coins.domain.api.CoinsRemoteDataSource
 import xyz.androidrey.cmp.coins.presentation.CoinListViewModel
 import xyz.androidrey.cmp.core.network.HttpClientFactory
+import kotlin.math.sin
 
 fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
@@ -28,8 +30,9 @@ expect val platformModule: Module
 val sharedModule = module {
     single<HttpClient> { HttpClientFactory.create(get()) }
 
-    viewModel { CoinListViewModel(get()) }
+    viewModel { CoinListViewModel(get(), get()) }
     singleOf(::GetCoinsListUseCase)
     singleOf(::KtorCoinsRemoteDataSource).bind<CoinsRemoteDataSource>()
     singleOf(::GetCoinDetailsUseCase)
+    singleOf(::GetCoinPriceHistoryUseCase)
 }
