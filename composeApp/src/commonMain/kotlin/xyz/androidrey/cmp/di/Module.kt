@@ -36,6 +36,7 @@ val sharedModule = module {
         getPortfolioDatabase(get<RoomDatabase.Builder<PortfolioDatabase>>())
     }
 
+
     viewModel { CoinListViewModel(get(), get()) }
     singleOf(::GetCoinsListUseCase)
     singleOf(::KtorCoinsRemoteDataSource).bind<CoinsRemoteDataSource>()
